@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Server
+namespace DummyClient
 {
     class Program
     {
         static void Main(string[] args)
         {
-            
+
         }
     }
 }
