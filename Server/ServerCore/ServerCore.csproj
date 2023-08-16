@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C2B1DC26-A6FE-45D4-A9EF-0F054D5BE6C1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>ServerCore</RootNamespace>
     <AssemblyName>ServerCore</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -62,9 +62,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lock.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Connector.cs" />
+    <Compile Include="Listener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecvBuffer.cs" />
+    <Compile Include="SendBuffer.cs" />
+    <Compile Include="Session.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
