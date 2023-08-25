@@ -6,8 +6,68 @@ using System.Threading.Tasks;
 
 namespace PacketGenerator
 {
+
     public class PacketFormat
     {
+        //{0} 패킷 등록
+        public static string managerFormat =
+@"using System;
+using System.Collections.Generic;
+using ServerCore;
+
+class PacketManager
+{{
+    #region Singleton
+    static PacketManager _instance;
+    
+    public static PacketManager Instance
+    {{
+        get
+        {{
+            if (_instance == null)
+                _instance = new PacketManager();
+            return _instance;
+        }}
+    }}
+    #endregion
+
+    Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>>();
+    Dictionary<ushort, Action<PacketSession, IPacket>> _handler = new Dictionary<ushort, Action<PacketSession, IPacket>>();
+
+    public void Register()
+    {{
+{0}
+    }}
+
+    public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
+    {{
+        ushort count = 0;
+        ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+        count += sizeof(ushort);
+        ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
+        count += sizeof(ushort);
+
+        Action<PacketSession, ArraySegment<byte>> action = null;
+
+        if (_onRecv.TryGetValue(id, out action))
+            action.Invoke(session, buffer);
+    }}
+
+    void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new()
+    {{
+        T p = new T();
+        p.Read(buffer);
+        Action<PacketSession, IPacket> action = null;
+        if (_handler.TryGetValue(p.Protocol, out action))
+            action.Invoke(session, p);
+    }}
+}}
+";
+
+        //{0} 패킷 이름
+        public static string managerRegsiterFormat =
+@"        _onRecv.Add((ushort)PacketId.{0}, MakePacket<{0}>);
+        _handler.Add((ushort)PacketId.{0}, PacketHandler.{0}Handler);";
         //{0} 패킷 이름/번호 목록
         //{1} 패킷 목록
         public static string fileFormat =
@@ -132,7 +192,7 @@ count += sizeof({1});
 @"ushort {0}Length = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
 count += sizeof(ushort);
 this.{0} = Encoding.Unicode.GetString(s.Slice(count, {0}Length));
-count += nameLength;
+count += {0}Length;
 ";
 
         //{0} 리스트 이름 [대문자]

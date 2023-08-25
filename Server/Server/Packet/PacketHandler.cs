@@ -1,24 +1,18 @@
-﻿using ServerCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Server;
+using ServerCore;
 
-namespace Server
+class PacketHandler
 {
-    class PacketHandler
+    public static void C_ChatHandler(PacketSession session, IPacket packet)
     {
-        public static void PlayerInfoReqHandler(PacketSession session, IPacket packet)
-        {
-            PlayerInfoReq p = packet as PlayerInfoReq;
+        C_Chat chatPacket = packet as C_Chat;
+        ClientSession clientSession = session as ClientSession;
 
-            Console.WriteLine($"PlayerInfoReq : {p.playerId} {p.name}");
+        if (clientSession.Room == null)
+            return;
 
-            foreach (PlayerInfoReq.Skill skill in p.skills)
-            {
-                Console.WriteLine($"Skill ({skill.id}) ({skill.level}) ({skill.duration})");
-            }
-        }
+        clientSession.Room.Broadcast(clientSession, chatPacket.chat);
     }
 }

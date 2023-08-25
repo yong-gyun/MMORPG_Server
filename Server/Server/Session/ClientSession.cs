@@ -11,26 +11,25 @@ namespace Server
 {
     public class ClientSession : PacketSession
     {
+        public int SessionId { get; set; }
+        public GameRoom Room { get; set; }
+
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            //Packet packet = new Packet { size = 100, id = 10 };
+            Program.Room.Enter(this);
 
-            //ArraySegment<byte> openSegment = SendBufferHelper.Open(4096);
-            //byte[] buffer = BitConverter.GetBytes(packet.size);
-            //byte[] buffer2 = BitConverter.GetBytes(packet.id);
-            //Array.Copy(buffer, 0, openSegment.Array, openSegment.Offset, buffer.Length);
-            //Array.Copy(buffer2, 0, openSegment.Array, openSegment.Offset + buffer.Length, buffer2.Length);
-
-            //ArraySegment<byte> sendBuffer = SendBufferHelper.Close(buffer.Length + buffer2.Length);
-            //Send(sendBuffer);
-            Thread.Sleep(5000);
-            Disconnect();
+            if(Room != null)
+            {
+                Room.Leave(this);
+                Room = null;
+            }
         }
 
         public override void OnDisconnected(EndPoint endPoint)
         {
+            SessionManager.Instance.Remove(this);
             Console.WriteLine($"OnDisconnected : {endPoint}");
         }
 
