@@ -75,7 +75,6 @@ namespace PacketGenerator
 
         public static Tuple<string, string, string> ParseMembers(XmlReader r)
         {
-            string packetName = r["name"];
             string memberCode = "";
             string readCode = "";
             string writeCode = "";

@@ -33,7 +33,7 @@ namespace Server
         {
             lock(_lock)
             {
-                ClientSession session = null;
+                ClientSession? session = null;
                 _sessions.TryGetValue(id, out session);
                 return session;
             }

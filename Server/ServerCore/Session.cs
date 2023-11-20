@@ -122,8 +122,6 @@ namespace ServerCore
             {
                 Console.WriteLine($"RegisterSend Failed {e}");
             }
-
-            
         }
 
         private void OnSendCompleted(object sener, SocketAsyncEventArgs args)
@@ -183,12 +181,12 @@ namespace ServerCore
                 {
                     //Write 커서 이동
                     if (_recvBuffer.OnWrite(args.BytesTransferred) == false)
-                    {
+                    { 
                         Disconnect();
                         return;
                     }
 
-                    //컨텐츠쪽으로 데이트를 넘겨주고 얼머나 처리했는지 받는다.
+                    //컨텐츠쪽으로 데이터를 넘겨주고 얼머나 처리했는지 받는다.
                     int processLength = OnRecv(_recvBuffer.ReadSegment);
                     if(processLength < 0 || processLength > _recvBuffer.DataSize)
                     {

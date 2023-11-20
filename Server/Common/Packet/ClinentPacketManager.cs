@@ -32,9 +32,9 @@ class PacketManager
     {
         ushort count = 0;
         ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
-        count += 2;
+        count += sizeof(ushort);
         ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
-        count += 2;
+        count += sizeof(ushort);
 
         Action<PacketSession, ArraySegment<byte>> action = null;
 
